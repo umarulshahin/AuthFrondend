@@ -2,30 +2,33 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
 import Header from "./Components/Header";
-import PrivetRoute from "./utils/PrivetRoute";
+import PrivatRoute from "./utils/PrivatRoute";
 import Home from "./Pages/Home";
 import Store from "./Redux/AppStore";
 import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
     <div>
-      <BrowserRouter>
-        <Provider store={Store}>
+      <Provider store={Store}>
+        <BrowserRouter>
           <Header />
           <Routes>
             <Route
               path="/"
               element={
-                <PrivetRoute>
+                <PrivatRoute>
                   <Home />
-                </PrivetRoute>
+                </PrivatRoute>
               }
             />
             <Route path="/login" element={<Login />} />
           </Routes>
-        </Provider>
-      </BrowserRouter>
+          <ToastContainer />
+        </BrowserRouter>
+      </Provider>
     </div>
   );
 };

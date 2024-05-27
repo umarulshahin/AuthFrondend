@@ -1,11 +1,25 @@
 import { useSelector } from "react-redux"
 import useUserManagement from "../utils/useUserManagement"
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 
 const Login = () => {
+
   const handleSubmit=useUserManagement()
   const username =useSelector((state)=>state.userdata.user.username)
+  const navigate=useNavigate()
+  const token = localStorage.getItem("authToken")
+
+  useEffect(()=>{
+     
+     {(token) ? navigate("/"):""}
+
+  },[token])
+  
+  console.log("Login page is working")
+
   return (
     <div className="h-screen flex items-center justify-center ">
       

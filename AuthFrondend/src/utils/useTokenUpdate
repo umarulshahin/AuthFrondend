@@ -1,0 +1,50 @@
+import { clearToken, updateToken } from "../Redux/UserSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+
+const useTokenUpdate = () => {
+  const dispatch = useDispatch();
+  const refreshToken=useSelector(state=>state.userdata.token)
+  if (refreshToken){
+
+  }
+  const handleUpdate = async (refreshToken) => {
+    console.log(refreshToken.refresh)
+        const value= JSON.parse(localStorage.getItem("authToken"))
+        dispatch(clearToken())
+    if (!value){
+        return null;
+    }
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/token/refresh/",
+        { refresh: value.refresh },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+
+        
+
+        localStorage.setItem("authToken", JSON.stringify(response.data));
+        dispatch(updateToken(response.data));
+        toast.success("Token refreshed successfully!");
+      } else {
+        toast.error("Something is wrong...");
+      }
+    } catch (error) {
+      toast.error("There was an error refreshing the token!");
+      console.error("There was an error!", error);
+    }
+  };
+
+  return handleUpdate;
+};
+
+export default useTokenUpdate;

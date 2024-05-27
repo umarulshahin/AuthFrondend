@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
 
-    const user=useSelector((state)=>state.userdata.user)
+    const user=useSelector((state)=>state.userdata.user.username)
+    console.log("Home page working")
   return (
     <div className="flex flex-col items-center justify-center font-bold text-xl">
       <p >
@@ -15,3 +17,4 @@ const Home = () => {
 };
 
 export default Home;
+
