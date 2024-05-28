@@ -14,7 +14,6 @@ const UserSlice=createSlice({
         setuserData:(state,action)=>{
             state.user=action.payload
              
-
         },
 
         setToken:(state,action)=>{

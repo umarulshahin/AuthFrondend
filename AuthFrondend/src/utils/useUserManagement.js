@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useTokenUpdate from "./useTokenUpdate";
 
 const useUserManagement = () => {
@@ -14,25 +14,30 @@ const useUserManagement = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const refreshToken=useSelector(state=>state.userdata.token)
+    const [Loading,setLoading]=useState()
     // const value =localStorage.getItem("authToken")
     const updateToken = useTokenUpdate();
         useMemo(() => {
 
-        const fourminuts = (1000 * 60 *4)    
-        const interval = setInterval(() => {
+            if(Loading){
+                updateToken()
+
+            } 
+            const fourminuts = (1000 * 60 *4)    
+            const interval = setInterval(() => {
             if (refreshToken){
             
-                updateToken(refreshToken);
+                updateToken();
 
             }
         }, fourminuts);
 
         return () => {
-            console.log('Cleanup function');
+            
             clearInterval(interval);
         };
 
-    }, [refreshToken]); 
+    }, [Loading,refreshToken]); 
 
     const handleUser = async (event) => {
 
@@ -53,7 +58,8 @@ const useUserManagement = () => {
                     },
                 }
             );
-
+            console.log(response.data,'set user first')
+             
             if (response.status === 200) {
 
                 const tokenData = jwtDecode(response.data.access);

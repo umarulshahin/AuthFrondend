@@ -1,21 +1,31 @@
-import { clearToken, updateToken } from "../Redux/UserSlice";
+import { clearToken, setuserData, updateToken } from "../Redux/UserSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
 const useTokenUpdate = () => {
   const dispatch = useDispatch();
-  const refreshToken=useSelector(state=>state.userdata.token)
-  if (refreshToken){
+  const refreshToken = useSelector((state) => state.userdata.token);
 
-  }
-  const handleUpdate = async (refreshToken) => {
-        const value= JSON.parse(localStorage.getItem("authToken"))
+  const handleUpdate = async () => {
 
-    if (!value){
-        return null;
+    const value = JSON.parse(localStorage.getItem("authToken"));
+
+    console.log(value, "update token locaStorage");
+    if (value){
+        localStorage.removeItem("authToken")
+
     }
+
+    console.log(refreshToken,"Redux state update ")
+
+    if (!value) {
+      return null;
+    }
+    console.log("update token called");
+
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/token/refresh/",
@@ -28,16 +38,19 @@ const useTokenUpdate = () => {
       );
 
       if (response.status === 200) {
-
-         dispatch(clearToken())
+        dispatch(clearToken());
 
         localStorage.setItem("authToken", JSON.stringify(response.data));
+        const tokenData = jwtDecode(response.data.access);
+        dispatch(setuserData(tokenData));
         dispatch(updateToken(response.data));
+        console.log(response.data);
         toast.success("Token refreshed successfully!");
-
+        
       } else {
         toast.error("Something is wrong...");
       }
+       
     } catch (error) {
       toast.error("There was an error refreshing the token!");
       console.error("There was an error!", error);
