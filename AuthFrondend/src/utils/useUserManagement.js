@@ -10,20 +10,22 @@ import useTokenUpdate from "./useTokenUpdate";
 
 const useUserManagement = () => {
     console.log("working useuser management")
-    
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const refreshToken=useSelector(state=>state.userdata.token)
     // const value =localStorage.getItem("authToken")
     const updateToken = useTokenUpdate();
         useMemo(() => {
+
+        const fourminuts = (1000 * 60 *4)    
         const interval = setInterval(() => {
             if (refreshToken){
             
                 updateToken(refreshToken);
 
             }
-        }, 5000);
+        }, fourminuts);
 
         return () => {
             console.log('Cleanup function');

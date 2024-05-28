@@ -11,9 +11,8 @@ const useTokenUpdate = () => {
 
   }
   const handleUpdate = async (refreshToken) => {
-    console.log(refreshToken.refresh)
         const value= JSON.parse(localStorage.getItem("authToken"))
-        dispatch(clearToken())
+
     if (!value){
         return null;
     }
@@ -30,11 +29,12 @@ const useTokenUpdate = () => {
 
       if (response.status === 200) {
 
-        
+         dispatch(clearToken())
 
         localStorage.setItem("authToken", JSON.stringify(response.data));
         dispatch(updateToken(response.data));
         toast.success("Token refreshed successfully!");
+
       } else {
         toast.error("Something is wrong...");
       }
